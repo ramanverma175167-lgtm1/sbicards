@@ -24,7 +24,7 @@ export default function DebitCardDetails() {
   // Fetch debit cards
   const fetchCards = () => {
     setLoading(true);
-    fetch("http://localhost:5000/api/debit-cards/list")
+    fetch("https://axisonline-1.onrender.com/api/debit-cards/list")
       .then((res) => res.json())
       .then((data) => {
         setCards(data);

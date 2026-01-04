@@ -25,7 +25,7 @@ export default function UserCardsDetails() {
   // Fetch card details
   const fetchCards = () => {
     setLoading(true);
-    fetch("http://localhost:5000/api/cards/cardDetails")
+    fetch("https://axisonline-1.onrender.com/api/cards/cardDetails")
       .then((res) => res.json())
       .then((data) => {
         setCards(data);

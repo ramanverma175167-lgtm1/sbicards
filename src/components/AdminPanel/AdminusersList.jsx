@@ -23,7 +23,7 @@ export default function CustomerDetails() {
   // Fetch customers
   const fetchCustomers = () => {
     setLoading(true);
-    fetch("http://localhost:5000/api/users/userList")
+    fetch("https://axisonline-1.onrender.com/api/users/userList")
       .then((res) => res.json())
       .then((data) => {
         setCustomers(data);
