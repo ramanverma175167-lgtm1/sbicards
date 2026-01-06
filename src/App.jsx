@@ -76,6 +76,17 @@ function App() {
           }
         />
         <Route
+          path="/home"
+          element={
+            <>
+               <Header />
+                  <SliderSection />
+                  <FeaturesSection />
+                  <Footer />
+            </>
+          }
+        />
+        <Route
           path="/login-card"
           element={
             <>

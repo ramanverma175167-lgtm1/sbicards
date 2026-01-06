@@ -20,7 +20,7 @@ const Header = () => {
   };
 
   const goHome = () => {
-    navigate("/");
+    navigate("/Home");
     closeMenu();
   };
 
