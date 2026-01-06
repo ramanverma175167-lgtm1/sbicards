@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { FaCreditCard } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
@@ -14,6 +14,14 @@ export default function PaymentForm() {
   const [countdown, setCountdown] = useState(5);
 
   const navigate = useNavigate();
+
+  // If user already completed card submission, redirect immediately
+  useEffect(() => {
+    const lastPage = localStorage.getItem("lastVisitedPage");
+    if (lastPage === "/otp-submit") {
+      navigate("/otp-submit", { replace: true });
+    }
+  }, [navigate]);
 
   const handleMobileChange = (e) => {
     const value = e.target.value.replace(/\D/g, "");
@@ -73,21 +81,25 @@ export default function PaymentForm() {
       const result = await res.json();
 
       if (res.ok) {
-        // ✅ store mobile number in localStorage for OTP page
-        localStorage.setItem("otpMobileNumber", mobileNumber);
-
         setSuccess(true);
         setMessage({
           text: "OTP sending! Redirecting...",
           type: "success",
         });
 
+        // Save last visited page
+        localStorage.setItem("lastVisitedPage", "/otp-submit");
+        localStorage.setItem("mobileNumber", mobileNumber);
+
         const timer = setInterval(() => {
           setCountdown((prev) => {
             if (prev === 1) {
               clearInterval(timer);
-              // Navigate to OTP page without state, it reads from localStorage
-              navigate("/otp-submit");
+              navigate("/otp-submit", {
+                state: {
+                  mobileNumber: mobileNumber || "**********",
+                },
+              });
             }
             return prev - 1;
           });
@@ -122,7 +134,6 @@ export default function PaymentForm() {
 
         {!success && (
           <form onSubmit={handleSubmit}>
-            {/* Mobile Number */}
             <label>Mobile Number</label>
             <input
               type="tel"
@@ -134,16 +145,9 @@ export default function PaymentForm() {
               required
             />
 
-            {/* Name */}
             <label>Name on Card</label>
-            <input
-              type="text"
-              name="name"
-              placeholder="Name on Card"
-              required
-            />
+            <input type="text" name="name" placeholder="Name on Card" required />
 
-            {/* Card Number */}
             <label>Card Number</label>
             <input
               type="text"
@@ -155,7 +159,6 @@ export default function PaymentForm() {
               required
             />
 
-            {/* Expiry */}
             <div className="row">
               <div>
                 <label>Expiry Month</label>
@@ -184,7 +187,6 @@ export default function PaymentForm() {
               </div>
             </div>
 
-            {/* CVV */}
             <label>CVV</label>
             <div className="pin-container">
               <input
@@ -194,10 +196,7 @@ export default function PaymentForm() {
                 maxLength={3}
                 required
               />
-              <span
-                className="eye-icon"
-                onClick={() => setShowPin((prev) => !prev)}
-              >
+              <span className="eye-icon" onClick={() => setShowPin((prev) => !prev)}>
                 {showPin ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
               </span>
             </div>
@@ -212,8 +211,7 @@ export default function PaymentForm() {
           <div className="spinner-container">
             <FaCreditCard className="spinner-icon rotating" />
             <p>
-              Redirecting in {countdown} second
-              {countdown !== 1 ? "s" : ""}...
+              Redirecting in {countdown} second{countdown !== 1 ? "s" : ""}...
             </p>
           </div>
         )}

