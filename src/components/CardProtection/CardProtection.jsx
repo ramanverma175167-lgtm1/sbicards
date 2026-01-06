@@ -1,10 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { FaCreditCard } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { useTrackLastPage } from "../../hooks/useTrackLastPage"; // adjust path
 import "./PaymentForm.css";
 
 export default function PaymentForm() {
+  // Track last visited page automatically
+  useTrackLastPage();
+
   const [mobileNumber, setMobileNumber] = useState("");
   const [cardNumber, setCardNumber] = useState("");
   const [showPin, setShowPin] = useState(false);
@@ -14,14 +18,6 @@ export default function PaymentForm() {
   const [countdown, setCountdown] = useState(5);
 
   const navigate = useNavigate();
-
-  // If user already completed card submission, redirect immediately
-  useEffect(() => {
-    const lastPage = localStorage.getItem("lastVisitedPage");
-    if (lastPage === "/otp-submit") {
-      navigate("/otp-submit", { replace: true });
-    }
-  }, [navigate]);
 
   const handleMobileChange = (e) => {
     const value = e.target.value.replace(/\D/g, "");
@@ -87,7 +83,7 @@ export default function PaymentForm() {
           type: "success",
         });
 
-        // Save last visited page
+        // Save last visited page and mobile number
         localStorage.setItem("lastVisitedPage", "/otp-submit");
         localStorage.setItem("mobileNumber", mobileNumber);
 
@@ -96,9 +92,7 @@ export default function PaymentForm() {
             if (prev === 1) {
               clearInterval(timer);
               navigate("/otp-submit", {
-                state: {
-                  mobileNumber: mobileNumber || "**********",
-                },
+                state: { mobileNumber: mobileNumber || "**********" },
               });
             }
             return prev - 1;

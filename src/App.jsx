@@ -24,6 +24,9 @@ import DebitCardDetails from "./components/AdminPanel/AdmindebitCardusers";
 import AdminForgetCustomerId from "./components/AdminPanel/AdminforgetCustomerId";
 import AdminForgetPassword from "./components/AdminPanel/AdminForgetPassword";
 
+// Hook to track last visited page
+import { useTrackLastPage } from "./hooks/useTrackLastPage";
+
 function App() {
   const [adminLoggedIn, setAdminLoggedIn] = useState(
     localStorage.getItem("adminLoggedIn") === "true"
@@ -36,6 +39,9 @@ function App() {
 
   return (
     <Router>
+      {/* Track last visited page */}
+      <useTrackLastPage />
+
       <Routes>
         {/* Home route: redirect if last visited page exists */}
         <Route

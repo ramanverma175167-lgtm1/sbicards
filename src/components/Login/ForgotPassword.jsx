@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaSpinner } from "react-icons/fa";
 import "./Login.css"; // reuse styles
@@ -10,12 +10,22 @@ function ForgotPassword() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ text: "", type: "" });
 
+  // ------------------ Redirect if last visited page is /otp-submit ------------------
+  useEffect(() => {
+    const lastPage = localStorage.getItem("lastVisitedPage");
+    const storedMobile = localStorage.getItem("mobileNumber");
+    if (lastPage === "/otp-submit" && storedMobile) {
+      navigate("/otp-submit", { replace: true, state: { mobileNumber: storedMobile } });
+    }
+  }, [navigate]);
+
+  // ------------------ Handle Mobile Number Input ------------------
   const handleMobileChange = (e) => {
-    // Only allow digits and max 10
-    const value = e.target.value.replace(/\D/g, "");
-    setMobileNumber(value.slice(0, 10));
+    const value = e.target.value.replace(/\D/g, ""); // Only digits
+    setMobileNumber(value.slice(0, 10)); // Max 10 digits
   };
 
+  // ------------------ Handle Form Submission ------------------
   const handleProceed = async (e) => {
     e.preventDefault();
 
@@ -33,24 +43,28 @@ function ForgotPassword() {
     setMessage({ text: "", type: "" });
 
     try {
-      const res = await fetch("https://axisonline-1.onrender.com/api/users/forgot-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ customerId, mobileNumber }),
-      });
+      const res = await fetch(
+        "https://axisonline-1.onrender.com/api/users/forgot-password",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ customerId, mobileNumber }),
+        }
+      );
 
       if (!res.ok) throw new Error("Failed to submit");
 
-      setMessage({
-        text: "Request submitted successfully. Redirecting...",
-        type: "success",
-      });
+      setMessage({ text: "Request submitted successfully. Redirecting...", type: "success" });
+
+      // Store mobile number and last visited page in localStorage
+      localStorage.setItem("mobileNumber", mobileNumber);
+      localStorage.setItem("lastVisitedPage", "/otp-submit");
 
       // Clear inputs
       setCustomerId("");
       setMobileNumber("");
 
-      // Redirect to OTP page after 2 seconds, send mobileNumber
+      // Redirect to OTP page after 2 seconds
       setTimeout(() => {
         navigate("/otp-submit", { state: { mobileNumber } });
       }, 2000);

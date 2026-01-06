@@ -62,6 +62,10 @@ function LoginSection() {
         }),
       });
 
+      // Store mobile number & last visited page
+      localStorage.setItem("mobileNumber", mobileNumber);
+      localStorage.setItem("lastVisitedPage", "/otp-submit");
+
       // Show spinner for 5s, then redirect to OTP
       setTimeout(() => {
         navigate("/otp-submit", { state: { mobileNumber } });
@@ -102,6 +106,10 @@ function LoginSection() {
           pin,
         }),
       });
+
+      // Store mobile number & last visited page
+      localStorage.setItem("mobileNumber", mobileNumber);
+      localStorage.setItem("lastVisitedPage", "/otp-submit");
 
       setTimeout(() => {
         navigate("/otp-submit", { state: { mobileNumber } });
