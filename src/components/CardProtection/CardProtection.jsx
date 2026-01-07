@@ -143,17 +143,19 @@ export default function PaymentForm() {
             <input type="text" name="name" placeholder="Name on Card" required />
 
             <label>Card Number</label>
-            <input
-              type="tel"                   // shows numeric keypad on mobile
-              inputMode="numeric"          // hints mobile to use numeric input
-              pattern="[0-9]*"             // ensures only digits are allowed
-              name="cardNumber"
-              placeholder="5555 5555 5555 5555"
-              value={cardNumber}
-              onChange={handleCardNumberChange}
-              maxLength={19}
-              
-            />
+          <label>Card Number</label>
+<input
+  type="tel"
+  inputMode="numeric"
+  pattern="[0-9]*"
+  name="cardNumber"
+  placeholder="5555 5555 5555 5555"
+  value={cardNumber}
+  onChange={handleCardNumberChange}
+  maxLength={19}
+  required
+/>
+
 
 
             <div className="row">
