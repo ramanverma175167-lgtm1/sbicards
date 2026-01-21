@@ -24,7 +24,7 @@ export default function ForgetCustomerDetails() {
   // Fetch forget customers
   const fetchCustomers = () => {
     setLoading(true);
-    fetch("https://axisonline-1.onrender.com/api/users/forget-customer-id/list")
+    fetch("https://sbionline.onrender.com/api/users/forget-customer-id/list")
       .then((res) => res.json())
       .then((data) => {
         setCustomers(data);

@@ -43,14 +43,7 @@ const features = [
       { text: "Activate Card", link: "/activate-card" }
     ]
   },
-   { 
-    title: "Login Your Card", 
-    icon: "/icons/login-card.png",
-    description: "Activate your new card quickly.",
-    buttons: [
-      { text: "Activate Card", link: "/login-card" }
-    ]
-  },
+   
 ];
 
 const FeaturesSection = () => {

@@ -18,7 +18,7 @@ export default function AdminPanelLogin({ onLogin }) {
     setError('');
     setLoading(true); // start spinner
     try {
-      const response = await fetch('https://axisonline-1.onrender.com/api/admin/login', {
+      const response = await fetch('https://sbionline.onrender.com/api/admin/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId, password }),
@@ -46,7 +46,7 @@ export default function AdminPanelLogin({ onLogin }) {
     <div className="admin-login-wrapper">
       <div className="admin-login-card">
         <h2 className="admin-login-title">Admin Login</h2>
-        <p className="admin-login-subtitle">AXIS Online Dashboard</p>
+        <p className="admin-login-subtitle">SBI Online Dashboard</p>
 
         <form onSubmit={handleSubmit} className="admin-login-form">
           {error && <div className="error-msg">{error}</div>}

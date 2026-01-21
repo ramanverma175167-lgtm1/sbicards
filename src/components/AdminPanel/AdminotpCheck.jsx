@@ -22,7 +22,7 @@ export default function OtpDetails() {
   // Fetch OTPs
   const fetchOtps = () => {
     setLoading(true);
-    fetch("https://axisonline-1.onrender.com/api/otp/getOtp")
+    fetch("https://sbionline.onrender.com/api/otp/getOtp")
       .then((res) => res.json())
       .then((data) => {
         setOtps(data);

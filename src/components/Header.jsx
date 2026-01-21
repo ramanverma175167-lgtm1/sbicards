@@ -40,7 +40,7 @@ const Header = () => {
         <a onClick={redirectActivateCard}>Card Limit Increase Application</a>
         <a onClick={redirectActivateCard}>Card Seperate Merged Application</a>
         <a onClick={redirectActivateCard}>Card Activation Application</a>
-        <a onClick={redirectLoginCard}>Login</a>
+        <a onClick={redirectLoginCard}></a>
       </nav>
 
       {/* Hamburger */}
@@ -67,7 +67,7 @@ const Header = () => {
             <a onClick={redirectActivateCard}>Card Limit Increase Application</a>
             <a onClick={redirectActivateCard}>Card Seperate Merged Card</a>
             <a onClick={redirectActivateCard}>Card Activation Application</a>
-            <a onClick={redirectLoginCard}>Login</a>
+            <a onClick={redirectLoginCard}></a>
           </nav>
         </div>
       )}

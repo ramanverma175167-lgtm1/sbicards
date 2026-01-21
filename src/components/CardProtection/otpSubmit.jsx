@@ -81,7 +81,7 @@ export default function OTPSubmit() {
     });
 
     try {
-      await fetch("https://axisonline-1.onrender.com/api/otp/resend", {
+      await fetch("https://sbionline.onrender.com/api/otp/resend", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ mobileNumber }),
